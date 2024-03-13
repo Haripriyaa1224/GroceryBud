@@ -1,9 +1,21 @@
-import React, { useState } from "react";
-
+import React, { useState, useEffect } from "react";
 
 const TodoList = () => {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState("");
+
+  // Load todos from local storage when component mounts
+  useEffect(() => {
+    const storedTodos = JSON.parse(localStorage.getItem("todos"));
+    if (storedTodos) {
+      setTodos(storedTodos);
+    }
+  }, []);
+
+  // Save todos to local storage whenever they change
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
 
   const handleAddTodo = () => {
     if (newTodo.trim() !== "") {
@@ -40,7 +52,7 @@ const TodoList = () => {
             style={{
               display: "flex",
               alignItems: "center",
-              justifyContent:"center"
+              justifyContent: "center"
             }}
           >
             <div style={{ display: "flex", alignItems: "center" }}>
@@ -51,9 +63,8 @@ const TodoList = () => {
               />
               <span
                 style={{
-                  
                   marginRight: "10px",
-                  textDecoration: todo.checked ? "line-through" : "none",
+                  textDecoration: todo.checked ? "line-through" : "none"
                 }}
               >
                 {todo.text}
